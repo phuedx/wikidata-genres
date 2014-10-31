@@ -1,0 +1,65 @@
+#!/usr/bin/env php
+<?php
+
+define( 'WDQ_API_URL_BASE', 'https://wdq.wmflabs.org/api' );
+define( 'WIKIDATA_API_URL_BASE', 'https://www.wikidata.org/w/api.php' );
+
+// Get all Wikidata items that are instances of music genre (Q188451)
+
+$musicGenresQueryUrl = WDQ_API_URL_BASE . '?q=CLAIM[31:188451]';
+$rawResponseBody = file_get_contents( $musicGenresQueryUrl );
+$responseBody = json_decode( $rawResponseBody, true );
+$musicGenres = array_map( function( $item ) { return "Q{$item}"; }, $responseBody['items'] );
+
+echo sprintf( "Found %d music genres. Resolving them 50 at a time...\n", count( $musicGenres ) );
+
+$chunks = array_chunk( $musicGenres, 50 );
+
+/**
+ * @var array[string, array] A map of the site to a map of the music genre's
+ *  title to its Wikidata ID
+ */
+$resolvedMusicGenres = array();
+
+foreach ( $chunks as $chunk ) {
+
+	// Resolve (read: grab the primary label and sitelinks for) the music genres
+	$resolveMusicGenresUrl = WIKIDATA_API_URL_BASE . '?format=json&action=wbgetentities&ids=' . implode( '|', $chunk );
+	$rawResponseBody = file_get_contents( $resolveMusicGenresUrl );
+	$responseBody = json_decode( $rawResponseBody, true );
+
+	foreach ( $responseBody['entities'] as $wikidataId => $resolvedMusicGenre ) {
+
+		$labels = $resolvedMusicGenre['labels'];
+		$rawPrimaryLabel = reset( $resolvedMusicGenre['labels'] );
+		$primaryLabel = $rawPrimaryLabel['value'];
+
+		$sitelinks = $resolvedMusicGenre['sitelinks'];
+
+		foreach ( $sitelinks as $sitelink ) {
+			$site = $sitelink['site'];
+			$title = $sitelink['title'];
+
+			if ( !isset($resolvedMusicGenres[$site] ) ) {
+				$resolvedMusicGenres[$site] = array();
+			}
+
+			$resolvedMusicGenres[$site][$title] = $wikidataId;
+		}
+
+		echo sprintf( "Resolved %s\n", $primaryLabel );
+	}
+}
+
+echo "Done!\n";
+
+echo "Writing files...";
+
+foreach ( $resolvedMusicGenres as $site => $localResolvedMusicGenres ) {
+	$filename = $site . '.json';
+	$contents = json_encode( $localResolvedMusicGenres, JSON_PRETTY_PRINT );
+	file_put_contents( $filename, $contents );
+}
+
+echo "Done!\n";
+
