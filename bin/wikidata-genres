@@ -38,7 +38,7 @@ foreach ( $chunks as $chunk ) {
 
 		foreach ( $sitelinks as $sitelink ) {
 			$site = $sitelink['site'];
-			$title = $sitelink['title'];
+			$title = str_replace( ' ', '_', $sitelink['title'] );
 
 			if ( !isset($resolvedMusicGenres[$site] ) ) {
 				$resolvedMusicGenres[$site] = array();
