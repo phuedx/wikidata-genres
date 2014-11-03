@@ -1,6 +1,6 @@
 {
     "Punk": "Q3071",
-    "Rock 'n' Roll": "Q7749",
+    "Rock_'n'_Roll": "Q7749",
     "Jazz": "Q8341",
     "Blues": "Q9759",
     "Reggae": "Q9794",
@@ -8,11 +8,11 @@
     "Rockmusi": "Q11399",
     "Metal": "Q38848",
     "Soul": "Q131272",
-    "Visual Kei": "Q131425",
+    "Visual_Kei": "Q131425",
     "J-Pop": "Q131578",
-    "Black Metal": "Q132438",
+    "Black_Metal": "Q132438",
     "Grindcore": "Q188534",
-    "Melodic Death Metal": "Q253918",
-    "Death Metal": "Q483251",
-    "Thrash Metal": "Q483352"
+    "Melodic_Death_Metal": "Q253918",
+    "Death_Metal": "Q483251",
+    "Thrash_Metal": "Q483352"
 }

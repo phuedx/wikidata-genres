@@ -1,10 +1,10 @@
 {
-    "Rock and roll": "Q7749",
+    "Rock_and_roll": "Q7749",
     "Jazz": "Q8341",
-    "Electronic music": "Q9778",
-    "Rock music": "Q11399",
-    "Country music": "Q83440",
-    "Soul music": "Q131272",
+    "Electronic_music": "Q9778",
+    "Rock_music": "Q11399",
+    "Country_music": "Q83440",
+    "Soul_music": "Q131272",
     "Ballads": "Q182659",
     "Ragtime": "Q185652"
 }
